@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-
+import React, { useState,useContext } from "react";
+import ShoppingContext from '../ShoppingContext.js';
 export default function ItemDetail({ item, addToCart }) {
   const [quantity, setQuantity] = useState(1);
+  const shopContext = useContext(ShoppingContext)
 
   if (!item) {
     return <div></div>;
-  }
+  }    
 
   const handleSelectChange = (event) => {
     setQuantity(event.target.value);
   };
 
   const detailAddCart = () => {
-    addToCart(item, quantity);
+    shopContext.addToCart(item, quantity);
   };
 
   return (

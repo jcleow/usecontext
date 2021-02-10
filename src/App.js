@@ -6,18 +6,21 @@ import axios from 'axios';
 import Cart from './components/Cart.jsx';
 import Items from './components/Items.jsx';
 import ItemDetail from './components/ItemDetail.jsx';
+import ShoppingContext from './ShoppingContext.js';
 
-const BACKEND_URL = 'http://localhost:3002';
 
 export default function App() {
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
   const [selectedItemIndex, setSelectedItem] = useState();
 
-  const addToCart = (item, quantity) => {
-    const cartItem = { quantity, ...item };
-    setCart([cartItem, ...cart]);
-  };
+
+  const BACKEND_URL = 'http://localhost:3004';
+
+const addToCart = (item, quantity) => {
+  const cartItem = { quantity, ...item };
+  setCart([cartItem, ...cart]);
+};
 
   const emptyCart = () => {
     setCart([]);
@@ -34,21 +37,29 @@ export default function App() {
     });
   };
 
-  const selectedItem = items[selectedItemIndex];
+   const shopState = {
+    addToCart,
+    emptyCart,
+    setItemDetail,
+    getItems,
+  }
 
+  const selectedItem = items[selectedItemIndex]
   return (
     <div className="container">
+      <ShoppingContext.Provider value={shopState}>
       <div className="row">
         <h1 className="page-title">Wow Shopping!</h1>
-        <Items items={items} setItemDetail={setItemDetail} />
+        <Items items={items} />
         {items.length === 0 && (
           <button type="button" onClick={getItems}>
             Get Items
           </button>
         )}
-        <ItemDetail item={selectedItem} addToCart={addToCart} />
-        <Cart items={cart} emptyCart={emptyCart} />
-      </div>
+        <ItemDetail item={selectedItem}/>
+        <Cart items={cart} />
+      </div>      
+      </ShoppingContext.Provider>
     </div>
   );
 }

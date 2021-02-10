@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
+import ShoppingContext from '../ShoppingContext.js';
 import axios from 'axios';
 
 export default function Cart({ items, emptyCart }) {
   const [orderId, setOrderId] = useState(null);
-
+  const shopContext = useContext(ShoppingContext);
   if (items.length === 0) {
     if (orderId) {
       return (
@@ -39,7 +40,7 @@ export default function Cart({ items, emptyCart }) {
     const order = { total, items };
     axios.post('/orders', order).then((result) => {
       setOrderId(result.data.order.id);
-      emptyCart();
+      shopContext.emptyCart();
       console.log(result);
     });
   };
